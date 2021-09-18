@@ -24,6 +24,16 @@ pub trait Doom {
 extern "C" {
     fn D_DoomMain(); // doomgeneric.h
     fn M_FindResponseFile(); // used in main of i_main.c
+    pub static key_right: raw::c_int;
+    pub static key_left: raw::c_int;
+    pub static key_up: raw::c_int;
+    pub static key_down: raw::c_int;
+    pub static key_strafeleft: raw::c_int;
+    pub static key_straferight: raw::c_int;
+    pub static key_fire: raw::c_int;
+    pub static key_use: raw::c_int;
+    pub static key_strafe: raw::c_int;
+    pub static key_speed: raw::c_int;
 }
 
 #[no_mangle]
