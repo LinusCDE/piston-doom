@@ -7,8 +7,22 @@ use piston::window::WindowSettings;
 
 mod doom;
 
+struct Game {}
+impl doom::Doom for Game {
+    fn draw_frame(&mut self, screen_buffer: &[u32], xres: usize, yres: usize) {
+        println!("draw_frame(<screen_buffer>, {:?}, {:?})", xres, yres);
+    }
+    fn get_key(&mut self) -> Option<doom::KeyData> {
+        println!("get_key() -> None");
+        None
+    }
+    fn set_window_title(&mut self, title: &str) {
+        println!("set_window_title({:?})", title);
+    }
+}
+
 fn main() {
-    doom::init();
+    doom::init(Game {});
 
     //let opengl = OpenGL::V3_2;
     let opengl = OpenGL::V2_1;
