@@ -4,16 +4,17 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut dg_c_paths = vec![];
     let mut dg_h_paths = vec![];
 
-    // Find c and h files (excluding anything starting with doomgeneric_ and i_main.c)
+    // Find most c and h files
     for entry in std::fs::read_dir(dg_src_dir)? {
         let entry = entry?;
         if let Some(filename) = entry.file_name().to_str() {
-            if !filename.starts_with("doomgeneric_") && filename.ends_with(".h") {
+            if filename.starts_with("doomgeneric") || filename == "i_main.c" {
+                continue;
+            }
+
+            if filename.ends_with(".h") {
                 dg_h_paths.push(dg_src_dir.join(filename));
-            } else if !filename.starts_with("doomgeneric_")
-                && filename.ends_with(".c")
-                && filename != "i_main.c"
-            {
+            } else if filename.ends_with(".c") {
                 dg_c_paths.push(dg_src_dir.join(filename));
             }
         }

@@ -5,37 +5,10 @@ use piston::event_loop::{EventSettings, Events};
 use piston::input::{RenderEvent, UpdateEvent};
 use piston::window::WindowSettings;
 
-extern "C" {
-    fn D_DoomMain();
-}
-
-#[no_mangle]
-extern "C" fn DG_Init() {}
-//#[no_mangle]
-//extern "C" fn DG_ScreenBuffer() {}
-#[no_mangle]
-extern "C" fn DG_GetKey(
-    pressed: *mut std::os::raw::c_int,
-    char: std::os::raw::c_uchar,
-) -> std::os::raw::c_int {
-    0
-}
-#[no_mangle]
-extern "C" fn DG_GetTicksMs() -> u32 {
-    0
-}
-#[no_mangle]
-extern "C" fn DG_SleepMs(ms: u32) {}
-#[no_mangle]
-extern "C" fn DG_DrawFrame() {}
-#[no_mangle]
-extern "C" fn DG_SetWindowTitle() {}
+mod doom;
 
 fn main() {
-    // doomgeneric stub
-    unsafe {
-        D_DoomMain();
-    }
+    doom::init();
 
     //let opengl = OpenGL::V3_2;
     let opengl = OpenGL::V2_1;

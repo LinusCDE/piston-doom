@@ -1,3 +1,9 @@
 /target
-/doom1.wad
 /doomgeneric
+
+# Dooms assets (you need to provide at least one of those in your working directory)
+/DOOM1.WAD
+/doom.wad
+
+# Doom savestate
+/.savegame
