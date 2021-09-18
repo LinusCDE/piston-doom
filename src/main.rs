@@ -65,7 +65,9 @@ impl doom::Doom for Game {
     fn get_key(&mut self) -> Option<doom::KeyData> {
         None
     }
-    fn set_window_title(&mut self, title: &str) {}
+    fn set_window_title(&mut self, title: &str) {
+        self.window.ctx.window().set_title(title);
+    }
 }
 
 fn main() {
