@@ -1037,6 +1037,7 @@ dependencies = [
 name = "piston-doom"
 version = "0.1.0"
 dependencies = [
+ "cc",
  "piston",
  "piston2d-graphics",
  "piston2d-opengl_graphics",
