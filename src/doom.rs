@@ -7,7 +7,7 @@ use std::thread::sleep;
 use std::time::{Duration, Instant};
 
 pub const DOOMGENERIC_RESX: usize = 640;
-pub const DOOMGENERIC_RESY: usize = 480;
+pub const DOOMGENERIC_RESY: usize = 400;
 
 #[derive(Debug, Clone, Copy)]
 pub struct KeyData {

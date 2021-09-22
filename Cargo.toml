@@ -11,6 +11,10 @@ piston2d-graphics = "0.40.0"
 pistoncore-glutin_window = "0.69.0"
 piston2d-opengl_graphics = "0.78.0"
 lazy_static = "1.4.0"
+#dither = "<=1.2"
+#dither = { path = "../dither" }
+image = "0.23.14"
+
 
 [build-dependencies]
 cc = "1.0"

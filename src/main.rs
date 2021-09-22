@@ -2,12 +2,15 @@ use std::collections::VecDeque;
 
 use glutin_window::GlutinWindow as Window;
 use graphics::Transformed;
+use image::ImageBuffer;
 use opengl_graphics::{CreateTexture, GlGraphics, OpenGL, Texture, TextureSettings};
 use piston::event_loop::{EventSettings, Events};
 use piston::input::{RenderEvent, UpdateEvent};
 use piston::window::WindowSettings;
 use piston::{Button, EventLoop, Key, PressEvent, ReleaseEvent};
+use std::time::Instant;
 
+mod blue_noise_dither;
 mod doom;
 
 use doom::KeyData;
@@ -17,6 +20,7 @@ struct Game {
     gl: GlGraphics,
 
     input_queue: VecDeque<KeyData>,
+    last_frame: Instant,
 }
 
 fn button_to_doom_key(button: Button) -> Option<u8> {
@@ -69,18 +73,32 @@ impl doom::Doom for Game {
                         f64::from(c.get_view_size()[0]),
                         f64::from(c.get_view_size()[1]),
                     ]);
-                    let mut screen_buffer_rgba: Vec<u8> = Vec::with_capacity(xres * yres * 4);
+                    let mut screen_buffer_rgb: Vec<u8> = Vec::with_capacity(xres * yres * 3);
                     for argb in screen_buffer {
-                        screen_buffer_rgba.push(((argb >> 16) & 0xFF) as u8);
-                        screen_buffer_rgba.push(((argb >> 8) & 0xFF) as u8);
-                        screen_buffer_rgba.push(((argb >> 0) & 0xFF) as u8);
+                        screen_buffer_rgb.push(((argb >> 16) & 0xFF) as u8);
+                        screen_buffer_rgb.push(((argb >> 8) & 0xFF) as u8);
+                        screen_buffer_rgb.push(((argb >> 0) & 0xFF) as u8);
                         // Alpha seems to be opacity. Inverting it.
-                        screen_buffer_rgba.push(255 - ((argb >> 24) & 0xFF) as u8);
+                        //screen_buffer_rgba.push(255 - ((argb >> 24) & 0xFF) as u8);
                     }
+
+                    let rgb_image = image::DynamicImage::ImageRgb8(
+                        ImageBuffer::from_vec(xres as u32, yres as u32, screen_buffer_rgb.clone())
+                            .unwrap(),
+                    );
+                    rgb_image.save("/tmp/frame.bmp");
+
+                    let dithered_rgba = blue_noise_dither::dither_image(
+                        screen_buffer_rgb,
+                        xres as u32,
+                        yres as u32,
+                        1,
+                    );
+
                     let texture = Texture::create(
                         &mut (),
                         opengl_graphics::Format::Rgba8,
-                        &screen_buffer_rgba,
+                        &dithered_rgba,
                         [xres as u32, yres as u32],
                         &TextureSettings::new(),
                     )
@@ -99,6 +117,11 @@ impl doom::Doom for Game {
                 break;
             }
         }
+
+        // Frame time
+        let now = Instant::now();
+        println!("Frame duration: {:?}", now.duration_since(self.last_frame));
+        self.last_frame = now;
     }
     fn get_key(&mut self) -> Option<doom::KeyData> {
         self.input_queue.pop_front()
@@ -115,7 +138,10 @@ fn main() {
     // Create an Glutin window.
     let window: Window = WindowSettings::new(
         "Piston-Doom",
-        [doom::DOOMGENERIC_RESX as u32, doom::DOOMGENERIC_RESY as u32],
+        [
+            doom::DOOMGENERIC_RESX as u32 * 2,
+            doom::DOOMGENERIC_RESY as u32 * 2,
+        ],
     )
     .graphics_api(opengl)
     .vsync(true)
@@ -128,5 +154,6 @@ fn main() {
         window,
         gl,
         input_queue: VecDeque::new(),
+        last_frame: Instant::now(),
     });
 }
