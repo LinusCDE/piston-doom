@@ -18,8 +18,8 @@ Since this project was merely a test, running it isn't that polished. I develope
 
 ### Clone this repo
 
-Clone this repo: `$ git clone https://github.com/LinusCDE/piston-doom.git`.  
- Go into the clone directory afterwards.
+Clone this repo with the doomgeneric submodule: `$ git clone --recurse-submodules https://github.com/LinusCDE/piston-doom.git`.  
+Go into the clone directory afterwards.
 
 ### Get an IWAD file
 
@@ -35,10 +35,6 @@ This project expects two dependencies: The doomgeneric repo and a IWAD file name
 - freedm.wad
 - freedoom2.wad
 - freedoom1.wad
-
-### doomgeneric repo
-
-Clone the doomgeneric repo, so the directory can be found in this repo: `$ git clone https://github.com/ozkl/doomgeneric.git`
 
 ### Compile
 
