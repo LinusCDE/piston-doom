@@ -375,6 +375,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "doomgeneric"
+version = "0.2.0"
+source = "git+https://github.com/LinusCDE/doomgeneric-rs.git?tag=0.2.0#62766848eb64a48543efa1d8f90caa6fe31237f5"
+dependencies = [
+ "cc",
+ "lazy_static",
+]
+
+[[package]]
 name = "downcast-rs"
 version = "1.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1038,7 +1047,7 @@ name = "piston-doom"
 version = "0.1.0"
 dependencies = [
  "cc",
- "lazy_static",
+ "doomgeneric",
  "piston",
  "piston2d-graphics",
  "piston2d-opengl_graphics",

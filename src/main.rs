@@ -8,9 +8,7 @@ use piston::input::{RenderEvent, UpdateEvent};
 use piston::window::WindowSettings;
 use piston::{Button, EventLoop, Key, PressEvent, ReleaseEvent};
 
-mod doom;
-
-use doom::KeyData;
+use doomgeneric::doom::{self, KeyData};
 
 struct Game {
     window: Window,
