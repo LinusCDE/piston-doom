@@ -18,7 +18,7 @@ Since this project was merely a test, running it isn't that polished. I develope
 
 ### Clone this repo
 
-Clone this repo with the doomgeneric submodule: `$ git clone --recurse-submodules https://github.com/LinusCDE/piston-doom.git`.  
+Clone this repo with the doomgeneric submodule: `$ git clone https://github.com/LinusCDE/piston-doom.git`.  
 Go into the clone directory afterwards.
 
 ### Get an IWAD file
