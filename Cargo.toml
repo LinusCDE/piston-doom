@@ -6,11 +6,13 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-piston = "0.53.0"
-piston2d-graphics = "0.40.0"
-pistoncore-glutin_window = "0.69.0"
-piston2d-opengl_graphics = "0.78.0"
-doomgeneric = { git = "https://github.com/LinusCDE/doomgeneric-rs.git", tag = "0.2.0" }
+piston = "1.0.0"
+piston2d-graphics = "0.45.0"
+pistoncore-glutin_window = "0.72.0"
+piston2d-opengl_graphics = "0.88.0"
+gl = "0.14.0"
+doomgeneric = "0.3.0-beta.3"
+#doomgeneric = { git = "https://github.com/LinusCDE/doomgeneric-rs.git", tag = "0.3.0-beta.3" }
 
 [build-dependencies]
 cc = "1.0"

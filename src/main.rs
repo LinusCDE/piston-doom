@@ -1,14 +1,17 @@
 use std::collections::VecDeque;
+use std::ffi::c_void;
 
 use glutin_window::GlutinWindow as Window;
 use graphics::Transformed;
 use opengl_graphics::{CreateTexture, GlGraphics, OpenGL, Texture, TextureSettings};
 use piston::event_loop::{EventSettings, Events};
 use piston::input::{RenderEvent, UpdateEvent};
+use piston::window::OpenGLWindow;
 use piston::window::WindowSettings;
 use piston::{Button, EventLoop, Key, PressEvent, ReleaseEvent};
 
-use doomgeneric::doom::{self, KeyData};
+use doomgeneric::game;
+use doomgeneric::input::{keys, KeyData};
 
 struct Game {
     window: Window,
@@ -21,16 +24,16 @@ fn button_to_doom_key(button: Button) -> Option<u8> {
     match button {
         Button::Keyboard(key) => match key {
             // Map keyboard keys from m_controller.c
-            Key::Right => Some(unsafe { doom::key_right as u8 }),
-            Key::Left => Some(unsafe { doom::key_left as u8 }),
-            Key::Up => Some(unsafe { doom::key_up as u8 }),
-            Key::Down => Some(unsafe { doom::key_down as u8 }),
-            Key::Comma => Some(unsafe { doom::key_strafeleft as u8 }),
-            Key::Period => Some(unsafe { doom::key_straferight as u8 }),
-            Key::RCtrl => Some(unsafe { doom::key_fire as u8 }),
-            Key::Space => Some(unsafe { doom::key_use as u8 }),
-            Key::LAlt | Key::RAlt => Some(unsafe { doom::key_strafe as u8 }),
-            Key::LShift | Key::RShift => Some(unsafe { doom::key_speed as u8 }),
+            Key::Right => Some(*keys::KEY_RIGHT),
+            Key::Left => Some(*keys::KEY_LEFT),
+            Key::Up => Some(*keys::KEY_UP),
+            Key::Down => Some(*keys::KEY_DOWN),
+            Key::Comma => Some(*keys::KEY_STRAFELEFT),
+            Key::Period => Some(*keys::KEY_STRAFERIGHT),
+            Key::RCtrl => Some(*keys::KEY_FIRE),
+            Key::Space => Some(*keys::KEY_USE),
+            Key::LAlt | Key::RAlt => Some(*keys::KEY_STRAFE),
+            Key::LShift | Key::RShift => Some(*keys::KEY_SPEED),
             // Let doom deal with the rest
             _ => Some(key as u8),
         },
@@ -38,7 +41,7 @@ fn button_to_doom_key(button: Button) -> Option<u8> {
     }
 }
 
-impl doom::Doom for Game {
+impl game::DoomGeneric for Game {
     fn draw_frame(&mut self, screen_buffer: &[u32], xres: usize, yres: usize) {
         let mut events = Events::new(EventSettings::new());
         events.set_max_fps(1000);
@@ -98,11 +101,11 @@ impl doom::Doom for Game {
             }
         }
     }
-    fn get_key(&mut self) -> Option<doom::KeyData> {
+    fn get_key(&mut self) -> Option<KeyData> {
         self.input_queue.pop_front()
     }
     fn set_window_title(&mut self, title: &str) {
-        self.window.ctx.window().set_title(title);
+        self.window.window.set_title(title);
     }
 }
 
@@ -111,20 +114,25 @@ fn main() {
     let opengl = OpenGL::V2_1;
 
     // Create an Glutin window.
-    let window: Window = WindowSettings::new(
+    let mut window: Window = WindowSettings::new(
         "Piston-Doom",
-        [doom::DOOMGENERIC_RESX as u32, doom::DOOMGENERIC_RESY as u32],
+        [game::DOOMGENERIC_RESX as u32, game::DOOMGENERIC_RESY as u32],
     )
     .graphics_api(opengl)
     .vsync(true)
     .build()
     .unwrap();
 
+    gl::load_with(|s| window.get_proc_address(s) as *const c_void);
+
     let gl = GlGraphics::new(opengl);
 
-    doom::init(Game {
+    game::init(Game {
         window,
         gl,
         input_queue: VecDeque::new(),
     });
+    loop {
+        doomgeneric::game::tick();
+    }
 }

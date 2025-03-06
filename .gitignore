@@ -1,7 +1,7 @@
 /target
 
 # Dooms assets (you need to provide at least one of those in your working directory)
-/DOOM1.WAD
+/doom1.wad
 /doom.wad
 
 # Doom savestate
